@@ -1,0 +1,26 @@
+-
+    host_type: cisco
+    ssh_connection_mode: "exec_command"
+    target_host:
+        - "192.168.1.201"
+        - "192.168.1.202"
+        - "192.168.1.203"
+        - "192.168.1.204"
+        - "192.168.1.205"
+        - "192.168.1.207"
+        - "192.168.1.208"
+        - "192.168.1.209"
+        - "192.168.1.210"
+    cmd_string: "show running-config"
+-
+    host_type: cisco
+    ssh_connection_mode: "invoke_shell"
+    target_host:
+        - "192.168.1.206"
+    cmd_string:
+        - "show clock"
+        - "show ip interface brief | exclude unassigned"
+        - "show interface description"
+        - "show inventory"
+        - "show logging"
+        - "show version"
