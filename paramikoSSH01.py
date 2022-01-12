@@ -27,6 +27,8 @@ BLOCK_WAIT = 2
 WAIT_DENOMINATOR = 100
 # time interval btwn querying channel close status
 CLOSE_WAIT = 0.5
+# number of decimal places to round time
+TIME_ROUND = 3
 
 
 def load_yaml(input_file: str) -> dict:
@@ -90,7 +92,7 @@ def ssh_connect(ssh_client: typing.Callable[[], typing.Any], input_list: list) -
             for cmd in cmd_str:
                 if ssh_session.send_ready():
                     ssh_session.send(f'\n{cmd}\n')
-                    time.sleep(round(WAIT_TIME/WAIT_DENOMINATOR, 3))
+                    time.sleep(round(WAIT_TIME/WAIT_DENOMINATOR, TIME_ROUND))
             if ssh_session.send_ready():
                 ssh_session.send("\nexit\n")
             while ssh_session.recv_ready():
@@ -150,4 +152,4 @@ if __name__ == "__main__":
 
     elapsed_time = time.perf_counter() - start_time
 
-    print(f'Elapsed Time: {round(elapsed_time, 3)} seconds')
+    print(f'Elapsed Time: {round(elapsed_time, TIME_ROUND)} seconds')
