@@ -29,6 +29,10 @@ WAIT_DENOMINATOR = 100
 CLOSE_WAIT = 0.5
 # number of decimal places to round time
 TIME_ROUND = 3
+# file mode to be used with open(filename, mode)
+FILE_MODE = "w"
+# file extension to be used with writing files
+FILE_EXTENSION = "txt"
 
 
 def load_yaml(input_file: str) -> dict:
@@ -137,7 +141,7 @@ def write_file(result_dict: dict) -> None:
     Write dict to file.
     """
     for k, v in result_dict.items():
-        with open(f'{k}.txt', "w") as f:
+        with open(f'{k}.{FILE_EXTENSION}', FILE_MODE) as f:
             f.write(v)
     return
 
