@@ -142,7 +142,7 @@ def write_file(result_dict: dict) -> None:
 
 
 if __name__ == "__main__":
-    y = load_yaml("test2.yaml")
+    y = load_yaml("test.yaml")
     l = create_list(y)
 
     start_time = time.perf_counter()
