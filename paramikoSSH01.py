@@ -29,7 +29,7 @@ WAIT_DENOMINATOR = 100
 CLOSE_WAIT = 0.5
 
 
-def load_yaml(input_file):
+def load_yaml(input_file: str) -> dict:
     """
     Read YAML file fully qualified path (fqp); output python object.
     """
@@ -39,7 +39,7 @@ def load_yaml(input_file):
     return yaml_obj
 
 
-def create_list(input_list):
+def create_list(input_list: list) -> list:
     """
     Create list of lists from YAML object.
 
@@ -59,7 +59,7 @@ def create_list(input_list):
 
 
 @contextlib.contextmanager
-def ssh_connect(ssh_client, input_list):
+def ssh_connect(ssh_client: typing.Callable[[], typing.Any], input_list: list) -> dict:
     """
     Custom context mgr. to manage paramiko ssh client connection.
     """
@@ -109,7 +109,7 @@ def ssh_connect(ssh_client, input_list):
             ssh_client.close()
 
 
-def cli_connect(input_list):
+def cli_connect(input_list: list) -> typing.Callable[[], typing.Any]:
     """
     SSH connection func that calls custom context mgr.
     """
@@ -119,7 +119,9 @@ def cli_connect(input_list):
         return s
 
 
-def ssh_thread_pool_map(func1, func2, input_list):
+def ssh_thread_pool_map(
+    func1: typing.Callable[[], typing.Any],
+    func2: typing.Callable[[], typing.Any], input_list: list) -> None:
     """
     Thread pool map for ssh connection.
     """
@@ -128,7 +130,7 @@ def ssh_thread_pool_map(func1, func2, input_list):
         p.map(func2, results)
 
 
-def write_file(result_dict):
+def write_file(result_dict: dict) -> None:
     """
     Write dict to file.
     """
