@@ -9,6 +9,8 @@ import concurrent.futures as cfut
 
 # NOTICE: these constant values seem to work well
 #
+# max threads
+MAX_THREADS = None
 # SSH port
 SSH_PORT = 22
 # SSH client TCP timeout in seconds
@@ -40,6 +42,7 @@ def load_yaml(input_file):
 def create_list(input_list):
     """
     Create list of lists from YAML object.
+
     This outter list will be supplied to thread pool map.
     Pool supplies inner list to ssh_connection function.
     """
@@ -116,13 +119,13 @@ def cli_connect(input_list):
         return s
 
 
-def ssh_thread_pool_map(func, input_list):
+def ssh_thread_pool_map(func1, func2, input_list):
     """
     Thread pool map for ssh connection.
     """
-    with cfut.ThreadPoolExecutor() as p:
-        results = p.map(func, input_list)
-    return results
+    with cfut.ThreadPoolExecutor(max_workers=MAX_THREADS) as p:
+        results = p.map(func1, input_list)
+        p.map(func2, results)
 
 
 def write_file(result_dict):
@@ -132,14 +135,7 @@ def write_file(result_dict):
     for k, v in result_dict.items():
         with open(f'{k}.txt', "w") as f:
             f.write(v)
-
-
-def write_file_thread_pool_map(func, input_list):
-    """
-    Thread pool map to write files.
-    """
-    with cfut.ThreadPoolExecutor() as p:
-        p.map(func, input_list)
+    return
 
 
 
@@ -148,9 +144,8 @@ if __name__ == "__main__":
     l = create_list(y)
 
     start_time = time.perf_counter()
-    r = ssh_thread_pool_map(cli_connect, l)
+    ssh_thread_pool_map(cli_connect, write_file, l)
 
-    write_file_thread_pool_map(write_file, r)
     elapsed_time = time.perf_counter() - start_time
 
     print(f'Elapsed Time: {round(elapsed_time, 3)} seconds')
