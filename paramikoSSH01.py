@@ -93,16 +93,25 @@ def ssh_connect(ssh_client: typing.Callable[[], typing.Any], input_list: list) -
             ssh_session.settimeout(BLOCK_WAIT)
             if ssh_session.send_ready():
                 ssh_session.send("\nterminal length 0\n")
-            for cmd in cmd_str:
+            if isinstance(cmd_str, str):
                 if ssh_session.send_ready():
-                    ssh_session.send(f'\n{cmd}\n')
+                    ssh_session.send(f'\n{cmd_str}\n')
                     time.sleep(round(WAIT_TIME/WAIT_DENOMINATOR, TIME_ROUND))
-            if ssh_session.send_ready():
-                ssh_session.send("\nexit\n")
-            while ssh_session.recv_ready():
-                o = ssh_session.recv(RECV_BYTES)
-                time.sleep(WAIT_TIME)
-                output.append(o.decode(TEXT_ENCODING))
+                while ssh_session.recv_ready():
+                    o = ssh_session.recv(RECV_BYTES)
+                    time.sleep(WAIT_TIME)
+                    output.append(o.decode(TEXT_ENCODING))
+            if isinstance(cmd_str, list):
+                for cmd in cmd_str:
+                    if ssh_session.send_ready():
+                        ssh_session.send(f'\n{cmd}\n')
+                        time.sleep(round(WAIT_TIME/WAIT_DENOMINATOR, TIME_ROUND))
+                if ssh_session.send_ready():
+                    ssh_session.send("\nexit\n")
+                while ssh_session.recv_ready():
+                    o = ssh_session.recv(RECV_BYTES)
+                    time.sleep(WAIT_TIME)
+                    output.append(o.decode(TEXT_ENCODING))
             d[target_host] = "".join(output)
             yield d
         except Exception as ERROR:
@@ -148,7 +157,7 @@ def write_file(result_dict: dict) -> None:
 
 
 if __name__ == "__main__":
-    y = load_yaml("test.yaml")
+    y = load_yaml("test2.yaml")
     l = create_list(y)
 
     start_time = time.perf_counter()
