@@ -16,23 +16,24 @@ SSH_PORT = 22
 # SSH client TCP timeout in seconds
 TCP_TIMEOUT = 300
 # SSH client receive amount in bytes
-RECV_BYTES = 131070
+# 2621400
+RECV_BYTES = 5242800
 # text encoding
 TEXT_ENCODING = "utf-8"
 # time in seconds for time.sleep()
 WAIT_TIME = 1
 # channel settimeout() in seconds
-BLOCK_WAIT = 2
+BLOCK_WAIT = 10
 # WAIT_TIME denominator for math: WAIT_TIME/WAIT_DENOMINATOR
-WAIT_DENOMINATOR = 100
+WAIT_DENOMINATOR = 45
 # time interval btwn querying channel close status
-CLOSE_WAIT = 0.5
+CLOSE_WAIT = 0.25
 # number of decimal places to round time
 TIME_ROUND = 3
 # file mode to be used with open(filename, mode)
 FILE_MODE = "w"
 # file extension to be used with writing files
-FILE_EXTENSION = "txt"
+FILE_EXTENSION = ".txt"
 
 
 def load_yaml(input_file: str) -> dict:
@@ -104,23 +105,23 @@ def ssh_connect(ssh_client: typing.Callable[[], typing.Any], input_list: list) -
             if isinstance(cmd_str, list):
                 for cmd in cmd_str:
                     if ssh_session.send_ready():
-                        ssh_session.send(f'\n{cmd}\n')
+                        # send_bytes = ssh_session.send(f'\n{cmd}\n')
+                        ssh_session.sendall(f'\n{cmd}\n')
                         time.sleep(round(WAIT_TIME/WAIT_DENOMINATOR, TIME_ROUND))
-                if ssh_session.send_ready():
-                    ssh_session.send("\nexit\n")
+                send_bytes = ssh_session.send("\nexit\n")
                 while ssh_session.recv_ready():
                     o = ssh_session.recv(RECV_BYTES)
                     time.sleep(WAIT_TIME)
                     output.append(o.decode(TEXT_ENCODING))
+                print(f'[{target_host}] SSH Remote Exit Status: {ssh_session.exit_status_ready()}')
             d[target_host] = "".join(output)
             yield d
         except Exception as ERROR:
             print(ERROR)
         finally:
             while not ssh_session.closed:
-                print(f'Client is Closed: {ssh_session.closed}')
                 time.sleep(CLOSE_WAIT)
-            print(f'Client is Closed: {ssh_session.closed}')
+            print(f'[{target_host}] SSH Client Exit Status: {ssh_session.closed}', end='\n\n')
             ssh_client.close()
 
 
@@ -150,14 +151,14 @@ def write_file(result_dict: dict) -> None:
     Write dict to file.
     """
     for k, v in result_dict.items():
-        with open(f'{k}.{FILE_EXTENSION}', FILE_MODE) as f:
+        with open(f'.private/{k}{FILE_EXTENSION}', FILE_MODE) as f:
             f.write(v)
     return
 
 
 
 if __name__ == "__main__":
-    y = load_yaml("test2.yaml")
+    y = load_yaml("paramiko-test.yaml")
     l = create_list(y)
 
     start_time = time.perf_counter()
