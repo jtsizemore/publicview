@@ -123,3 +123,55 @@ variable "storage_image_reference_sku" {
     description = "vm storage image reference sku"
 }
 
+variable "storage_image_reference_version" {
+    type = string
+    description = "vm storage image reference version"
+}
+
+variable "azure_ilb_name" {
+    type = string
+    description = "azure ilb name"
+}
+
+variable "azure_ilb_sku" {
+    type = string
+}
+
+variable "azure_ilb_frontend_ip_config_name" {
+    type = string
+}
+
+variable "azure_ilb_private_ip_address_allocation" {
+    type = string
+}
+
+variable "azure_ilb_vip_address" {
+    type = string
+}
+
+variable "azure_ilb_backend_pool_name" {
+    type = string
+}
+
+variable "azure_ilb_probe" {
+    type = list(map(any))
+    # default = [ {
+    #   "name"        = "tcp-probe-8443"
+    #   "port"        = 8443
+    #   "protocol"    = "tcp"
+    # } ]
+}
+
+variable "azure_ilb_rule" {
+    type = list(map(any))
+    # default = [ {
+    #   "name"        = "tcp-rule-8443"
+    #   "port"        = 8443
+    #   "protocol"    = "tcp"
+    # } ]
+}
+
+variable "deploy01_tags" {
+    type = map(string)
+    default = null
+}
