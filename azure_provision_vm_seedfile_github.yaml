@@ -1,0 +1,96 @@
+subscription_id_local: null
+subscription_id_remote: null
+create_rg: true
+create_vnet: true
+resource_group:
+  name: rg-jtsizemore-rg01
+  kwargs:
+    location: eastus
+virtual_network:
+  rg_name: rg-jtsizemore-rg01
+  name: vnet-jtsizemore-vnet01
+  kwargs:
+    location: eastus
+    address_space:
+      address_prefixes:
+        - '10.1.1.0/24'
+subnet:
+  rg_name: rg-jtsizemore-rg01
+  vnet_name: vnet-jtsizemore-vnet01
+  name: snet-jtsizemore-snet01
+  kwargs:
+    address_prefix: '10.1.1.0/28'
+create_vm:
+  -
+    public_ip_address:
+      rg_name: rg-jtsizemore-rg01
+      name: pip-jtsizemore-pip01
+      kwargs:
+        location: eastus
+        sku:
+          name: basic
+          public_ip_allocation_method: dynamic
+          public_ip_address_version: ipv4
+    vm_nic:
+      rg_name: rg-jtsizemore-rg01
+      name: nic-jtsizemore-nic01
+      kwargs:
+        location: eastus
+        ip_configurations:
+          -
+            name: ipconfig01
+            subnet:
+              id: null
+              privateipallocation: static
+              private_ip_address: '10.1.1.4'
+              public_ip_address:
+                id: null
+    azure_vm:
+      name: vm-jtsizemore-vm01
+      kwargs:
+        location: eastus
+        storage_profile:
+          image_reference:
+            publisher: canonical
+            offer: 0001-com-ubuntu-server-focal
+            sku: 20_04-lts-gen2
+            version: '20.04.202207130'
+        hardware_profile:
+          vm_size: Standard_B1ls
+        os_profile:
+          computer_name: vm-jtsizemore-vm01
+          admin_username: user01
+          admin_password: null
+        network_profile:
+          network_interfaces: []
+  -
+    public_ip_address: {}
+    vm_nic:
+      nic_name: nic-jtsizemore-vm02-nic01
+      kwargs:
+        location: eastus
+        ip_configurations:
+          -
+            name: ipconfig01
+            subnet:
+              id: null
+              privateipallocation: static
+              private_ip_address: '10.1.1.5'
+    azure_vm:
+      name: vm-jtsizemore-test-vm02
+      kwargs:
+        location: eastus
+        storage_profile:
+          image_reference:
+            publisher: Canonical
+            offer: '0001-com-ubuntu-server-focal'
+            sku: '20_4-lts-gen2'
+            version: latest
+        hardware_profile:
+          vm_size: Standard_D2s_v3
+        os_profile:
+          computer_name: vm-jsizemore-test-vm02
+          admin_username: null
+          admin_password: null
+        network_profile:
+          network_interfaces: []
