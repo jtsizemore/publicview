@@ -63,34 +63,34 @@ create_vm:
           admin_password: null
         network_profile:
           network_interfaces: []
-  -
-    public_ip_address: {}
-    vm_nic:
-      nic_name: nic-jtsizemore-vm02-nic01
-      kwargs:
-        location: eastus
-        ip_configurations:
-          -
-            name: ipconfig01
-            subnet:
-              id: null
-              privateipallocation: static
-              private_ip_address: '10.1.1.5'
-    azure_vm:
-      name: vm-jtsizemore-test-vm02
-      kwargs:
-        location: eastus
-        storage_profile:
-          image_reference:
-            publisher: Canonical
-            offer: '0001-com-ubuntu-server-focal'
-            sku: '20_4-lts-gen2'
-            version: latest
-        hardware_profile:
-          vm_size: Standard_D2s_v3
-        os_profile:
-          computer_name: vm-jsizemore-test-vm02
-          admin_username: null
-          admin_password: null
-        network_profile:
-          network_interfaces: []
+  # -
+  #   public_ip_address: {}
+  #   vm_nic:
+  #     nic_name: nic-jtsizemore-vm02-nic01
+  #     kwargs:
+  #       location: eastus
+  #       ip_configurations:
+  #         -
+  #           name: ipconfig01
+  #           subnet:
+  #             id: null
+  #             privateipallocation: static
+  #             private_ip_address: '10.1.1.5'
+  #   azure_vm:
+  #     name: vm-jtsizemore-test-vm02
+  #     kwargs:
+  #       location: eastus
+  #       storage_profile:
+  #         image_reference:
+  #           publisher: Canonical
+  #           offer: '0001-com-ubuntu-server-focal'
+  #           sku: '20_4-lts-gen2'
+  #           version: latest
+  #       hardware_profile:
+  #         vm_size: Standard_D2s_v3
+  #       os_profile:
+  #         computer_name: vm-jsizemore-test-vm02
+  #         admin_username: null
+  #         admin_password: null
+  #       network_profile:
+  #         network_interfaces: []

@@ -211,7 +211,7 @@ Otherwise, press CTRL-C to quit: '''
                 yaml_parent_object['resource_group']['name'],
                 yaml_parent_object['resource_group']['kwargs']
                 )
-        input('enter')
+        # input('Press ENTER to continue...')
         # check vnet
         if yaml_parent_object['create_vnet'] == True:
             vnet_id = create_update_vnet(
@@ -230,19 +230,19 @@ Otherwise, press CTRL-C to quit: '''
             print(f'VNET ID: {vnet_id}')
             print(f'SNET ID: {snet_id}')
             
-        input('enter')
+        # input('Press ENTER to continue...')
         # loop through vms
         for vm in yaml_parent_object['create_vm']:
             #  HARD CODING SOME STUFF FOR SAKE OF EXPEDIENCY... NEED TO MAKE IT MORE DYNAMIC LATER
             # public ip check
-            # if len(vm['public_ip_address']) < 1:
-            #     pip_id = create_update_public_ip(
-            #         azcli_authentication,
-            #         vm['public_ip_address']['rg_name'],
-            #         vm['public_ip_address']['name'],
-            #         vm['public_ip_address']['kwargs']
-            #         )
-            input('enter')
+            if len(vm['public_ip_address']) > 1:
+                pip_id = create_update_public_ip(
+                    azcli_authentication,
+                    vm['public_ip_address']['rg_name'],
+                    vm['public_ip_address']['name'],
+                    vm['public_ip_address']['kwargs']
+                    )
+            # input('Press ENTER to continue...')
             # subnet check
             _tmp_subnet = vm['vm_nic']['kwargs']['ip_configurations'][0]['subnet']
             if _tmp_subnet['id'] is None:
@@ -257,7 +257,7 @@ Otherwise, press CTRL-C to quit: '''
                 snet_id,
                 vm['vm_nic']['kwargs']
             )
-            input('enter')
+            # input('Press ENTER to continue...')
             # admin password
             _tmp_osprofile = vm['azure_vm']['kwargs']['os_profile']
             if _tmp_osprofile['admin_password'] is None:
@@ -267,6 +267,10 @@ Otherwise, press CTRL-C to quit: '''
             _tmp_networkinterfaces = vm['azure_vm']['kwargs']['network_profile']['network_interfaces']
             if len(_tmp_networkinterfaces) < 1:
                 _tmp_networkinterfaces.append({'id': nic_id})
+            # check pip association to nic
+            _tmp_ipconfig = vm['vm_nic']['kwargs']['ip_configurations'][0]['subnet']
+            if _tmp_ipconfig['public_ip_address']['id'] == None:
+                _tmp_ipconfig['public_ip_address']['id'] = pip_id
             # provision vm
             rg_name = yaml_parent_object['resource_group']['name']
             vm_name = vm['azure_vm']['name']
@@ -277,8 +281,8 @@ Otherwise, press CTRL-C to quit: '''
                 vm_name,
                 kwargs
                 )
-            input('enter')
+            input('VM provision complete. Press ENTER to continue...')
 
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main('azure_provision_vm_seedfile_github.yaml')
