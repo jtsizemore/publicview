@@ -74,10 +74,10 @@ variable "disable_password_authentication" {
     description = "false is use password. true if use admin_ssh_key"
 }
 
-# variable "admin_password" {
-#     type = string
-#     sensitive = true
-# }
+variable "linux_vm_admin_password" {
+    type = string
+    sensitive = true
+}
 
 # variable "network_interface_ids" {
 #     type = list(string)

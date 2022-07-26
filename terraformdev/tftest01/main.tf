@@ -72,7 +72,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm_ubuntu" {
     size = var.virtual_machine_size
     admin_username = var.linux_vm_admin_username
     disable_password_authentication = var.disable_password_authentication
-    # admin_password = var.linux_vm_admin_password
+    admin_password = var.linux_vm_admin_password
     network_interface_ids = [resource.azurerm_network_interface.virtual_machine_nic[count.index].id]
     # admin_ssh_key {}
     os_disk {
