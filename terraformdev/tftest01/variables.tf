@@ -31,6 +31,25 @@ variable "vm_nic_count" {
 #     type = string
 # }
 
+# variable "public_ip_address_name" {
+#     type = string
+#     default = "pip01"
+# }
+
+variable "public_ip_address_name_prefix" {
+    type = string
+    default = "pip"
+}
+
+variable "public_ip_address_allocation" {
+    type = string
+    default = "Static"
+}
+
+variable "public_ip_address_dns" {
+    type = string
+}
+
 variable "virtual_machine_nic_name_prefix" {
     type = string
 }

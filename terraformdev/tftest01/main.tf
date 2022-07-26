@@ -41,6 +41,19 @@ resource "azurerm_subnet" "subnet" {
     address_prefixes = var.subnet_address_prefixes
 }
 
+resource "azurerm_public_ip" "public_ip_address" {
+    depends_on = [
+      azurerm_resource_group.resource_group
+    ]
+    count = var.vm_nic_count
+    # name = var.public_ip_address_name
+    name = format("${var.public_ip_address_name_prefix}%03s", count.index + 1)
+    resource_group_name = var.resource_group_name
+    location = var.resource_group_location
+    allocation_method = var.public_ip_address_allocation
+    domain_name_label = var.public_ip_address_dns
+}
+
 resource "azurerm_network_interface" "virtual_machine_nic" {
     depends_on = [
       azurerm_subnet.subnet
@@ -51,13 +64,14 @@ resource "azurerm_network_interface" "virtual_machine_nic" {
     location = var.resource_group_location
     resource_group_name = var.resource_group_name
     ip_configuration {
-        name = format("${var.ip_configuration_prefix}%02s", count.index + 1)
+        name = format("${var.ip_configuration_prefix}%03s", count.index + 1)
         subnet_id = resource.azurerm_subnet.subnet.id
         private_ip_address_allocation = var.private_ip_address_allocation
         private_ip_address = (
             lower(var.private_ip_address_allocation) == "static" ?
             cidrhost(resource.azurerm_subnet.subnet.address_prefixes[0], count.index + 4) : null
         )
+        public_ip_address_id = azurerm_public_ip.public_ip_address[count.index].id
     }
 }
 
