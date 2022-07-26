@@ -14,6 +14,7 @@ vm_cluster_size = 1
 virtual_machine_name_prefix = "vm-jtsizemore-test-vm"
 virtual_machine_size = "Standard_B1ls"
 # linux_vm_admin_username = "user01"
+disable_password_authentication = false
 # admin_password = ""
 # network_interface_ids = []
 # virtual_machine_disk_caching = None

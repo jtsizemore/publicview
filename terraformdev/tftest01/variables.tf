@@ -68,6 +68,12 @@ variable "linux_vm_admin_username" {
     default = "user01"
 }
 
+variable "disable_password_authentication" {
+    type = bool
+    default = true
+    description = "false is use password. true if use admin_ssh_key"
+}
+
 # variable "admin_password" {
 #     type = string
 #     sensitive = true
