@@ -4,6 +4,10 @@ virtual_network_name = "vnet-jtsizemore-test-vnet01"
 virtual_network_address_space = [ "10.1.1.0/24" ]
 subnet_name = "snet-jtsizemore-test-snet01"
 subnet_address_prefixes = [ "10.1.1.0/28" ]
-vm_cluster_size = 3
-virtual_machine_nic_name = "nic-jtsizemore-nic01"
-
+vm_nic_count = 1
+# virtual_machine_nic_name = "nic-jtsizemore-nic01"
+virtual_machine_nic_name_prefix = "nic-jtsizemore-nic"
+ip_configuration_prefix = "ipconfig-"
+# ip_configuration_name = "ipconfig-01"
+private_ip_address_allocation = "static"
+vm_cluster_size = 1

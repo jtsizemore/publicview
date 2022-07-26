@@ -37,14 +37,19 @@ resource "azurerm_subnet" "subnet" {
 }
 
 resource "azurerm_network_interface" "virtual_machine_nic" {
-    count = var.vm_cluster_size
-    name = var.virtual_machine_nic_name
+    count = var.vm_nic_count
+    # name = var.virtual_machine_nic_name
+    name = format("${var.virtual_machine_nic_name_prefix}%03s", count.index + 1)
     location = var.resource_group_location
     resource_group_name = var.resource_group_name
     ip_configuration {
-        name = var.ip_configuration_prefix
+        name = format("${var.ip_configuration_prefix}%02s", count.index + 1)
         subnet_id = var.subnet_id
         private_ip_address_allocation = var.private_ip_address_allocation
+        private_ip_address = (
+            lower(var.private_ip_address_allocation) == "static" ?
+            cidrhost(resource.azurerm_subnet.vm_subnet.address_prefixes[0], count.index + 4) : null
+            )
     }
 }
 
@@ -67,3 +72,4 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
         version = var.virtual_machine_image_reference_version
     }
 }
+

@@ -22,13 +22,22 @@ variable "subnet_address_prefixes" {
     type = list(string)
 }
 
-variable "vm_cluster_size" {
+variable "vm_nic_count" {
     type = number
+    description = "number of nics for each vm"
 }
+
+# variable "virtual_machine_nic_name" {
+#     type = string
+# }
 
 variable "virtual_machine_nic_name_prefix" {
     type = string
 }
+
+# variable "ip_configuration_name" {
+#     type = string
+# }
 
 variable "ip_configuration_prefix" {
     type = string
@@ -40,6 +49,10 @@ variable "private_ip_address_allocation" {
 
 variable "network_interface_ids" {
     type = list(string)
+}
+
+variable "vm_cluster_size" {
+    type = number
 }
 
 variable "virtual_machine_disk_caching" {
