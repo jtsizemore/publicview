@@ -45,17 +45,33 @@ variable "ip_configuration_prefix" {
 
 variable "private_ip_address_allocation" {
     type = string
+    default = "Dynamic"
 }
 
 variable "vm_cluster_size" {
     type = number
 }
 
-variable "size" {
+variable "virtual_machine_name_prefix" {
+    type = string
+}
+
+variable "virtual_machine_size" {
     type = string
     default = "Standard_B1ls"
     description = "azure vm sizing"
 }
+
+variable "linux_vm_admin_username" {
+    type = string
+    sensitive = true
+    default = "user01"
+}
+
+# variable "admin_password" {
+#     type = string
+#     sensitive = true
+# }
 
 # variable "network_interface_ids" {
 #     type = list(string)
@@ -75,7 +91,7 @@ variable "virtual_machine_storage_account_type" {
 
 variable "virtual_machine_image_reference_publisher" {
     type = string
-    default = "canonical"
+    default = "Canonical"
 }
 
 variable "virtual_machine_image_reference_offer" {

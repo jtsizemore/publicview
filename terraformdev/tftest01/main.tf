@@ -9,6 +9,11 @@ terraform {
 
 provider "azurerm" {
     features {}
+    # tenant_id = null
+    # subscription_id = null
+    # client_id = null
+    # client_secret = null
+    skip_provider_registration = false
 }
 
 resource "azurerm_resource_group" "resource_group" {
@@ -37,6 +42,9 @@ resource "azurerm_subnet" "subnet" {
 }
 
 resource "azurerm_network_interface" "virtual_machine_nic" {
+    depends_on = [
+      azurerm_subnet.subnet
+    ]
     count = var.vm_nic_count
     # name = var.virtual_machine_nic_name
     name = format("${var.virtual_machine_nic_name_prefix}%03s", count.index + 1)
@@ -44,23 +52,28 @@ resource "azurerm_network_interface" "virtual_machine_nic" {
     resource_group_name = var.resource_group_name
     ip_configuration {
         name = format("${var.ip_configuration_prefix}%02s", count.index + 1)
-        subnet_id = var.subnet_id
+        subnet_id = resource.azurerm_subnet.subnet.id
         private_ip_address_allocation = var.private_ip_address_allocation
         private_ip_address = (
             lower(var.private_ip_address_allocation) == "static" ?
-            cidrhost(resource.azurerm_subnet.vm_subnet.address_prefixes[0], count.index + 4) : null
+            cidrhost(resource.azurerm_subnet.subnet.address_prefixes[0], count.index + 4) : null
         )
     }
 }
 
-resource "azurerm_linux_virtual_machine" "linux_vm" {
+resource "azurerm_linux_virtual_machine" "linux_vm_ubuntu" {
+    depends_on = [
+      azurerm_network_interface.virtual_machine_nic
+    ]
     count = var.vm_cluster_size
     name = format("${var.virtual_machine_name_prefix}%02s", count.index + 1)
     resource_group_name = var.resource_group_name
     location = var.resource_group_location
     size = var.virtual_machine_size
-    network_interface_ids = [azurerm_network_interface.vm_nics[count.index].id]
-    admin_ssh_key {}
+    admin_username = var.linux_vm_admin_username
+    # admin_password = var.linux_vm_admin_password
+    network_interface_ids = [resource.azurerm_network_interface.virtual_machine_nic[count.index].id]
+    # admin_ssh_key {}
     os_disk {
         caching = var.virtual_machine_disk_caching
         storage_account_type = var.virtual_machine_storage_account_type
