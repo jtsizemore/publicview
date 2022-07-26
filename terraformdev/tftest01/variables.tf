@@ -47,34 +47,48 @@ variable "private_ip_address_allocation" {
     type = string
 }
 
-variable "network_interface_ids" {
-    type = list(string)
-}
-
 variable "vm_cluster_size" {
     type = number
 }
 
+variable "size" {
+    type = string
+    default = "Standard_B1ls"
+    description = "azure vm sizing"
+}
+
+# variable "network_interface_ids" {
+#     type = list(string)
+# }
+
 variable "virtual_machine_disk_caching" {
     type = string
+    default = "None"
+    description = "disk caching values: None, ReadOnly, ReadWrite"
 }
 
 variable "virtual_machine_storage_account_type" {
     type = string
+    default = "Standard_LRS"
+    description = "azure storage types: standard_lrs, standardssd_lrs, premium_lrs, standardssd_zrs, premium_zrs"
 }
 
 variable "virtual_machine_image_reference_publisher" {
     type = string
+    default = "canonical"
 }
 
 variable "virtual_machine_image_reference_offer" {
     type = string
+    default = "0001-com-ubuntu-server-focal"
 }
 
 variable "virtual_machine_image_reference_sku" {
     type = string
+    default = "20_04-lts-gen2"
 }
 
 variable "virtual_machine_image_reference_version" {
     type = string
+    default = "latest"
 }

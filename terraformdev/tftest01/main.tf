@@ -49,7 +49,7 @@ resource "azurerm_network_interface" "virtual_machine_nic" {
         private_ip_address = (
             lower(var.private_ip_address_allocation) == "static" ?
             cidrhost(resource.azurerm_subnet.vm_subnet.address_prefixes[0], count.index + 4) : null
-            )
+        )
     }
 }
 
@@ -72,4 +72,3 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
         version = var.virtual_machine_image_reference_version
     }
 }
-
