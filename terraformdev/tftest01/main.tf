@@ -56,7 +56,7 @@ resource "azurerm_public_ip" "public_ip_address" {
 
 resource "azurerm_network_interface" "virtual_machine_nic" {
     depends_on = [
-      azurerm_subnet.subnet
+      azurerm_subnet.subnet,
     ]
     count = var.vm_nic_count
     # name = var.virtual_machine_nic_name
