@@ -51,7 +51,7 @@ resource "azurerm_public_ip" "public_ip_address" {
     resource_group_name = var.resource_group_name
     location = var.resource_group_location
     allocation_method = var.public_ip_address_allocation
-    domain_name_label = var.public_ip_address_dns
+    # domain_name_label = var.public_ip_address_dns
 }
 
 resource "azurerm_network_interface" "virtual_machine_nic" {
@@ -86,9 +86,12 @@ resource "azurerm_linux_virtual_machine" "linux_vm_ubuntu" {
     size = var.virtual_machine_size
     admin_username = var.linux_vm_admin_username
     disable_password_authentication = var.disable_password_authentication
-    admin_password = var.linux_vm_admin_password
+    # admin_password = var.linux_vm_admin_password
     network_interface_ids = [resource.azurerm_network_interface.virtual_machine_nic[count.index].id]
-    # admin_ssh_key {}
+    admin_ssh_key {
+      username = var.admin_ssh_key.username
+      public_key = file(var.admin_ssh_key.publickey)
+    }
     os_disk {
         caching = var.virtual_machine_disk_caching
         storage_account_type = var.virtual_machine_storage_account_type
