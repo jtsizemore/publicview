@@ -51,7 +51,7 @@ resource "azurerm_public_ip" "public_ip_address" {
     resource_group_name = var.resource_group_name
     location = var.resource_group_location
     allocation_method = var.public_ip_address_allocation
-    # domain_name_label = var.public_ip_address_dns
+    domain_name_label = var.public_ip_address_dns
 }
 
 resource "azurerm_network_interface" "virtual_machine_nic" {
@@ -101,5 +101,8 @@ resource "azurerm_linux_virtual_machine" "linux_vm_ubuntu" {
         offer = var.virtual_machine_image_reference_offer
         sku = var.virtual_machine_image_reference_sku
         version = var.virtual_machine_image_reference_version
+    }
+    boot_diagnostics {
+        storage_account_uri = var.boot_diagnostics_storage_uri
     }
 }
