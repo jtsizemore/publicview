@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block resume_body %}
+        <h3>API Information</h3><br><br>
+        This API only supports 'GET' method. <br><br>
+        Getting an endpoint where "<code>&lt;int:id&gt</code>" is a number between 1 and 12. <br>
+        This returns the entire object. <br>
+        <code>http://jtsizemoreresume2022.eastus.cloudapp.azure.com:8080/api/&lt;int:id&gt;</code> <br><br>
+        Return specific values of the object by calling the key. <br>
+        Valid keys: <br>
+        <ul>
+                <code>
+                        <li>id</li>
+                        <li>company</li>
+                        <li>date</li>
+                        <li>role</li>
+                        <li>description</li>
+                </code>
+        </ul>
+        <code>http://jtsizemoreresume2022.eastus.cloudapp.azure.com:8080/api/&lt;int:id&gt;/&lt;string:key&gt;</code>
+
+{% endblock resume_body %}
