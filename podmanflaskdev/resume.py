@@ -2,8 +2,13 @@ import os
 from markupsafe import escape
 from flask import Flask, render_template
 from flask_restful import Api, Resource
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 import resume_info
 
+
+# get absolute directory path
+abs_file_path = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 api = Api(app)
@@ -70,6 +75,30 @@ class ResumeApiDetails(Resource):
 api.add_resource(ResumeApiAll, '/api/all')
 api.add_resource(ResumeApi, '/api/<int:id>')
 api.add_resource(ResumeApiDetails, '/api/<int:id>/<string:key>')
+
+
+# sqlalchemy db
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(abs_file_path, 'resumedb.sqlite')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+ma = Marshmallow(app)
+
+
+class OnlineResume(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company = db.Column(db.String(115))
+    date = db.Column(db.String(15))
+    role = db.Column(db.String(115))
+    description = db.Column(db.String(115))
+
+    def __init__(self, company, date, role, description):
+        self.company = company
+        self.date = date
+        self.role = role
+        self.description = description
+
+
+
 
 
 if __name__ == '__main__':
