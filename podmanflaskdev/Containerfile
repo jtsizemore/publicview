@@ -17,4 +17,4 @@ COPY . /app
 ENTRYPOINT [ "python" ]
 
 # run flask python file
-CMD [ "resume_view.py" ]
+CMD [ "resume.py" ]

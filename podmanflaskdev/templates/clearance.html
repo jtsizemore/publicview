@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block resume_body %}
+    <h1>Welcome to Jeremy's Online Resume Cloud Container Demo</h1> <br>
+        {% for k, v in r.security_clearance.items() %}
+            {% if k.lower() == "usaf" %}
+            <b style="font-size:1.75vw"><u>{{ k|upper }}:</u></b><br>
+            {% else %}
+            <b style="font-size:1.75vw"><u>{{ k|capitalize }}:</u></b><br>
+            {% endif %}
+            (Inactive) {{ v }}<br><br>
+        {% endfor %}
+{% endblock resume_body %}
