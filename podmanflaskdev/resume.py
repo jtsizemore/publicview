@@ -61,7 +61,10 @@ class ResumeApiDetails(Resource):
         d = resume_info.work_history[id]
         keys = [ k for k in d.keys() ]
         if id in resume_info.work_history.keys():
-            return d.get(key, {'error': 'non-existant key', 'keys': keys})        
+            try:
+                return d[key]
+            except KeyError as e:
+                return {'error': 'non-existant key', 'keys': keys}, 404
 
 
 api.add_resource(ResumeApiAll, '/api/all')
