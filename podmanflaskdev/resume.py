@@ -1,4 +1,5 @@
 import os
+from markupsafe import escape
 from flask import Flask, render_template
 from flask_restful import Api, Resource
 import resume_info
@@ -33,8 +34,13 @@ def clearance():
 def about():
     return render_template('about.html', title='About JTS')
 
+@app.route('/api')
+@app.route('/api/')
+def api_info():
+    return render_template('api_info.html', title='About JTS')
 
-class ResumeApiInfo(Resource):
+
+class ResumeApiAll(Resource):
     def get(self):
         return {
             'data': f'Please enter a work history id between 1 and {len(resume_info.work_history)}: /api/<int:id>',
@@ -50,8 +56,17 @@ class ResumeApi(Resource):
             return {'error': f'Please enter a work history id between 1 and {len(resume_info.work_history)}: /api/<int:id>'}
 
 
-api.add_resource(ResumeApiInfo, '/api', '/api/')
+class ResumeApiDetails(Resource):
+    def get(self, id, key):
+        d = resume_info.work_history[id]
+        keys = [ k for k in d.keys() ]
+        if id in resume_info.work_history.keys():
+            return d.get(key, {'error': 'non-existant key', 'keys': keys})        
+
+
+api.add_resource(ResumeApiAll, '/api/all')
 api.add_resource(ResumeApi, '/api/<int:id>')
+api.add_resource(ResumeApiDetails, '/api/<int:id>/<string:key>')
 
 
 if __name__ == '__main__':
