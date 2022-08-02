@@ -1,9 +1,9 @@
 {% extends 'layout.html' %}
 {% block resume_body %}
-        {% for d in r.work_history %}
-            <b style="font-size:1.75vw">{{ r.work_history[d].company }}</b><br>
-            <b>From: {{ r.work_history[d].date }}</b><br>
-            <b>{{ r.work_history[d].role }}</b><br>
-            {{ r.work_history[d].description }}<br><br>
+        {% for d in wh_dict %}
+            <b style="font-size:1.75vw">{{ d.company }}</b><br>
+            <b>From: {{ d.date }}</b><br>
+            <b>{{ d.role }}</b><br>
+            {{ d.description }}<br><br>
         {% endfor %}
 {% endblock resume_body %}
