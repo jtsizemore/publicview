@@ -1,4 +1,6 @@
 import os
+import requests
+import json
 from markupsafe import escape
 from flask import Flask, render_template, request, jsonify
 from flask_restful import Api, Resource
@@ -75,12 +77,20 @@ work_history_singlular_schema = WorkHistorySchema()
 work_history_plural_schema = WorkHistorySchema(many=True)
 
 
-# flask routes
+# flask processors
 @app.context_processor
 def resume_info_template():
-    return dict(r=resume_info)
+    return dict(ri=resume_info)
 
 
+@app.context_processor
+def get_work_history():
+    results = requests.get('http://127.0.0.1:5000/workhistoryall')
+    results = json.loads(results.text)
+    return dict(wh_dict=results)
+
+
+# flask routes
 @app.route('/')
 @app.route('/home', methods=['GET'])
 def home():
