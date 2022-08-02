@@ -1,8 +1,3 @@
-from resume import db
-import resume_info
-import requests
-import os
-
 
 
 def main():

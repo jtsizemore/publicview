@@ -117,7 +117,7 @@ def api_info():
     return render_template('api_info.html', title='About JTS')
 
 
-@app.route('/addworkhistory', methods=['POST'])
+@app.route('/workhistory/add', methods=['POST'])
 def add_workhistory():
     company = request.json['company']
     date = request.json['date']
@@ -131,7 +131,7 @@ def add_workhistory():
     return work_history_singlular_schema.jsonify(new_work_history)
 
 
-@app.route('/workhistoryall', methods=['GET'])
+@app.route('/workhistory/all', methods=['GET'])
 def get_all():
     all_work_history = ResumeWorkHistory.query.all()
     result = work_history_plural_schema.dump(all_work_history)
