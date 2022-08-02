@@ -33,21 +33,33 @@ class ResumeApiAll(Resource):
 
 class ResumeApi(Resource):
     def get(self, id):
-        if id in resume_info.work_history.keys():
-            return resume_info.work_history[id]
+        # if id in resume_info.work_history.keys():
+        #     return resume_info.work_history[id]
+        results = requests.get('http://127.0.0.1:5000/workhistory/all')
+        results = json.loads(results.text)
+        keys = [ i['id'] for i in results ]
+        if id in keys:
+            for i in results:
+                if i['id'] == id:
+                    return i
         else:
             return {'error': f'Please enter a work history id between 1 and {len(resume_info.work_history)}: /api/<int:id>'}
 
 
 class ResumeApiDetails(Resource):
     def get(self, id, key):
-        d = resume_info.work_history[id]
-        keys = [ k for k in d.keys() ]
-        if id in resume_info.work_history.keys():
+        # d = resume_info.work_history[id]
+        results = requests.get('http://127.0.0.1:5000/workhistory/all')
+        results = json.loads(results.text)
+        keys = [ i['id'] for i in results ]
+        if id in keys:
             try:
-                return d[key]
+                for i in results:
+                    if i['id'] == id:
+                        return i[key]
             except KeyError as e:
-                return {'error': 'non-existant key', 'keys': keys}, 404
+                e_keys = [ k for k in results[0].keys() ]
+                return {'error': 'non-existant key', 'keys': e_keys}, 404
 
 
 api.add_resource(ResumeApiAll, '/api/all')
@@ -80,12 +92,12 @@ work_history_plural_schema = WorkHistorySchema(many=True)
 # flask processors
 @app.context_processor
 def resume_info_template():
-    return dict(ri=resume_info)
+    return dict(r=resume_info)
 
 
 @app.context_processor
 def get_work_history():
-    results = requests.get('http://127.0.0.1:5000/workhistoryall')
+    results = requests.get('http://127.0.0.1:5000/workhistory/all')
     results = json.loads(results.text)
     return dict(wh_dict=results)
 
